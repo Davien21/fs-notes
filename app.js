@@ -5,7 +5,7 @@ const file_server = new node_static.Server('./public');
 const http = require('http');
 const url = require('url');
  
-const hostname = '127.0.0.1';
+const hostname = 'localhost';
 const port = process.env.PORT || 5000
 const server = http.createServer((req,res) => {
 	let q = url.parse(req.url, true);
