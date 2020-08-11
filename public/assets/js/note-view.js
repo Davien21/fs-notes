@@ -1,6 +1,5 @@
 let note_form = document.querySelector('form.note-form');
 let title_div = document.querySelector('.title-div');
-let title_input = document.querySelector('input[name=name]');
 let note_content = document.querySelector('textarea[name=content]');
 let actions_div = document.querySelector('div#actions-div');
 let err_span = document.querySelector('.err');
@@ -19,40 +18,97 @@ let query = window.location.search.slice(1);
 if (isCreateQuery(query)) {
 	handle_create_query();
 }else if (isViewQuery(query)) {
-	handle_view_query();
+	let note_name = query.slice(query.indexOf('&n=')+3);
+	handle_view_query(note_name);
 }
 
-function handle_view_query () {
-	display_note()
+function handle_view_query (name) {
+	show_topic(formatContent(name));
+	get_note(formatContent(name))
 	
 }
-function display_note () {
-	handle_topic ('r');
-	handle_content('tr');
+function get_note (name) {
+	let body = {name};
+	fetch(`${url}view`, {
+	    method: 'post',
+	    headers: {
+	        "Content-Type": "application/json",
+	    },
+	    body: JSON.stringify(body)
+	})
+	.then (res => (res.json()))
+	.then (content => {
+		show_note(content.data);
+	})
+	.catch(err => alert(`There seems to be an Error:\n${err}`));
 }
-function handle_topic (topic) {
-	note_content.disabled = true;
-	let title_btn = 
+function show_topic (topic) {
+	let title_content = 
 	`
-		<input name="name" disabled class="form-control" placeholder="Type a Topic or Title">
+		<input name="name" class="form-control" value="${topic}">
 		<div class="input-group-append">
-			<div class="btn btn-primary" id="rename-title">Change</div>
+			<button class="btn btn-primary" id="rename-title">Save</button>
 		</div>
 	`
-	title_div.innerHTML += title_btn;
+	title_div.innerHTML += title_content;
+	title_div.querySelector('button').onclick = () => renameTopic(topic)
 }
-function handle_content (content) {
+function renameTopic (topic) {
+	let new_name = title_div.querySelector('input').value;
+	if (new_name === '') {
+		return alert('Cannot give a blank name')
+	}
+	new_name !== topic ? renameTopicReq(topic,new_name) : alert('Change the topic first'); 
+}
+function renameTopicReq (name,new_name) {
+	let body = {name,new_name};
+	fetch(`${url}rename`, {
+	    method: 'post',
+	    headers: {
+	        "Content-Type": "application/json",
+	    },
+	    body: JSON.stringify(body)
+	})
+	.then (res => (res.json()))
+	.then (data => {
+		alert('New name has been saved');
+		window.location.href = `./note-view.html?a=view&n=${new_name}`;
+	})
+	.catch(err => alert(`There seems to be an Error:\n${err}`));
+}
+function formatContent (content) {
+	return content.replace(/%20/g,' ').trim()
+}
+function updateNote (content) {
+	let new_content = note_content.value;
+	let topic = document.querySelector('input').value.trim();
+	content !== new_content ? updateNoteReq(topic,new_content) : alert('Change the content first'); 
+}
+function updateNoteReq (name,content) {
+	let body = {name,content};
+	fetch(`${url}update`, {
+	    method: 'post',
+	    headers: {
+	        "Content-Type": "application/json",
+	    },
+	    body: JSON.stringify(body)
+	})
+	.then (res => (res.json()))
+	.then (data => {
+		alert('Successfully edited note');
+		// window.location.href = `./note-view.html?a=view&n=${name}`;
+	})
+	.catch(err => alert(`There seems to be an Error:\n${err}`));
+}
+function show_note (content) {
+	note_content.innerText = content;
 	let action_btn = 
 	`
-		<button id="edit-note" class="btn btn-primary">Edit Note</button>
+		<button id="edit-note" class="btn btn-primary">Save Note</button>
 	`
 	actions_div.innerHTML += action_btn;
 	action_btn = actions_div.querySelector('button#edit-note');
-	action_btn.onclick = () => {
-		let title = title_input.value.trim();
-		let content = note_content.value.trim();
-		create_request(title,content);
-	};
+	action_btn.onclick = () => updateNote(content);
 }
 function handle_create_query () {
 	let title_btn = 
@@ -62,6 +118,7 @@ function handle_create_query () {
 			<div class="btn btn-orange" id="title-action">Topic</div>
 		</div>
 	`
+	note_content.placeholder = 'Write the Content of this note...';
 	title_div.innerHTML += title_btn;
 	let action_btn = 
 	`
@@ -70,32 +127,30 @@ function handle_create_query () {
 	actions_div.innerHTML += action_btn;
 	action_btn = actions_div.querySelector('button#create');
 	action_btn.onclick = () => {
-		let title = title_input.value.trim();
+		let title = title_div.querySelector('input').value;
 		let content = note_content.value.trim();
 		create_request(title,content);
 	};
 }
-function handle_creation (title) {
-	alert(`${title}\nwas successfully created`);
-	window.location.href = './'
 
-}
-function create_request (title,content) {
-	if (title === '' || content === '') {
+function create_request (name,content) {
+	if (name === '' || content === '') {
 		return err_span.innerText = 'Fill both Title and Note contents';
 	} 	 
-	let body = {
-		name:title,
-		content:content
-	}
+	let body = {name,content};
 	fetch(`${url}create`, {
-	    method: 'post', // *GET, POST, PUT, DELETE, etc.
+	    method: 'post',
 	    headers: {
 	        "Content-Type": "application/json",
 	    },
-	    body: JSON.stringify(body) // body data type must match "Content-Type" header
+	    body: JSON.stringify(body)
 	})
 	.then (res => (res.json()))
-	.then (data => {handle_creation(title)})
+	.then (data => {
+		alert(`${title}\nwas successfully created`);
+		window.location.href = './'
+	})
 	.catch(err => alert(`There seems to be an Error:\n${err}`));
 }
+
+/*=======Util functions=========*/

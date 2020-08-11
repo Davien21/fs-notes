@@ -4,8 +4,8 @@ let search_input = document.querySelector('input#note-input')
 let note_table = document.querySelector('table#note-table');
 let note_tbody = note_table.querySelector('tbody');
 
+
 let url = 'http://127.0.0.1:5000/';
- 
 handle_note_display(url)
 
 function make_note_list (note_arr) {
@@ -19,7 +19,6 @@ function make_note_list (note_arr) {
 	view_btns.forEach( (btn) => btn.onclick = () => viewNote(btn,note_arr) );
 }
 let formatTitle = (title) => {
-	title = title.charAt(0).toUpperCase() + title.slice(1);
 	title = title.replace('.txt','');
 	return title;
 }

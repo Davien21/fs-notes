@@ -28,3 +28,6 @@ button,input {
 .table-title {
 	align-self: center;
 }
+textarea {
+	white-space: pre-wrap;
+}

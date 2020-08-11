@@ -1,4 +1,7 @@
 const fs = require('fs');
+function formatContent (content) {
+	return content.replace(/%20/g,' ')
+}
 
 class NoteClass {
 	constructor () {
@@ -73,6 +76,7 @@ class NoteClass {
 		
 	}
 	renameNote (res,name,new_name) {
+		name = formatContent(name);new_name = formatContent(new_name);
 		fs.rename(`./notes/${name}.txt`,`./notes/${new_name}.txt` , (err) => {
 			res.writeHead(200, this.headers);
 			if (err) {
