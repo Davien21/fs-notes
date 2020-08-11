@@ -1,0 +1,30 @@
+body {
+    background-color: #FAEBD7;
+}
+.paper-box-shadow {
+	box-shadow: 0 6px 10px -4px rgba(0,0,0,.15);
+}
+ 
+.btn-orange {
+	color: #fff;
+	background-color: #F7772F;
+	border-color: #F7772F;
+}
+.btn-orange:hover {
+	color: #fff;
+	background-color: #F0950E;
+	border-color: #FF9800;
+}
+#movie-content {
+	overflow-x: auto;
+	white-space: nowrap;
+}
+.table {
+	margin-bottom: 0 !important;
+}
+button,input {
+	border-radius: 0 !important;
+}
+.table-title {
+	align-self: center;
+}

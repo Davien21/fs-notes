@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>A Note App</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+		<link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+	</head>
+	<body>
+		<main>
+			<section class="container-fluid my-4">
+				<div class="row">
+					<div class="col-sm-10 col-md-8 col-lg-6 mx-auto">
+						<form class="" onsubmit="event.preventDefault()">
+							<div class="input-group paper-box-shadow">
+								<input id="note-input" class="form-control "  placeholder="Search notes by topic">
+								<div class="input-group-append">
+									<button class="btn btn-orange" id="search-btn">Search</button>
+								</div>
+							</div>
+						</form>
+						<div class="d-flex justify-content-between flex-wrap mt-4 mb-2">
+							<label class="table-title">Notes</label>
+							<button id="new-btn" class="btn btn-info paper-box-shadow">New Note</button>
+						</div>
+						<div id="note-content" class="paper-box-shadow">
+							
+							<table id="note-table" class="table table-s m table-hover table-light">
+                                <thead class="small">
+                                    <tr>
+                                      <th scope="col">Topic</th>
+                                      <th scope="col"> Actions </th>
+                                    </tr>
+                                </thead>
+                                <tbody >
+                                  
+                                </tbody>
+                            </table>
+							
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+		<script src="./assets/js/index.js"></script>
+	</body>
+</html>
